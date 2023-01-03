@@ -1,0 +1,45 @@
+header{
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header a{
+    color: violet; 
+    font-size: large;  
+}
+
+header a:hover{
+    text-decoration: none;
+}
+
+header p{
+    color: black;
+    font-size: large;
+}
+
+body {
+    background-color: white;
+}
+
+#prompt{
+    display: flex;
+    justify-content: center;
+}
+
+#buttons{
+    display: flex;
+    flex-direction: column;
+}
+
+.answer{
+    color: white;
+    background-color: purple;
+    display: none;
+}
+
+#info{
+    display: flex;
+    justify-content: center;
+}
