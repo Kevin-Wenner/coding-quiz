@@ -26,6 +26,7 @@ body {
 #prompt{
     display: flex;
     justify-content: center;
+    margin-top: 5em;
 }
 
 #buttons{
@@ -33,13 +34,21 @@ body {
     flex-direction: column;
 }
 
+
 .answer{
     color: white;
+    font-size: large;
     background-color: purple;
-    display: none;
+    border-radius: .5em;
+    margin: .5em 30em;
+
 }
 
 #info{
     display: flex;
     justify-content: center;
+}
+
+#grade{
+    margin: .5em 30em;
 }

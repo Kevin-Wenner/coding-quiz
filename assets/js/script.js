@@ -53,86 +53,141 @@ var time;
 var questionPrompt = document.getElementById("prompt");
 var answers = document.querySelectorAll("answer");
 var info = document.getElementById("info")
-var numberCorrect = 0;
-
-// Buttons
-var one = document.getElementById("answerOne");
-var two = document.getElementById("answerTwo");
-var three = document.getElementById("answerThree");
-var four = document.getElementById("answerFour");
+var buttonsEl = document.getElementById("buttons");
+var numberCorrect;
+var numberWrong;
 
 var grade = document.getElementById("grade");
 var timer = document.getElementById("timer");
 //quiz start, set right+wrong to 0, hide answers 2 thru 4
 
 questionPrompt.textContent = "Coding Quiz Challenge";
-one.setAttribute("style", "display: block");
-document.getElementById("info").textContent = "Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will penalize your score/time by ten seconds.";
-one.textContent = "Start Quiz";
-one.addEventListener("click", function(){StartQuiz()});
+info.textContent = "Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will penalize your score/time by ten seconds.";
+
+var startQuizButton = buttonsEl.appendChild(document.createElement('button'));
+startQuizButton.setAttribute("id", "startQuizButton");
+startQuizButton.setAttribute("class", "answer");
+startQuizButton.textContent = "Start Quiz";
+// remove button
+startQuizButton.addEventListener("click", function(event){
+    StartQuiz();
+    event.stopPropagation;
+    this.remove();
+    
+});
 
 //button starts time and questions
 function StartQuiz(){
     
     // starts timmer and ends on time out
-    var time = 75000;
-    var timeCountdown = setTimeout(function(){
-        
-        console.log(time);
+    var time = 75;
+    var questionOn = 0;
+    var timeCountdown = setInterval(function(){
         time--;
         timer.textContent = "Time: " + time;
 
-        if(time === 0){
-            clearTimeout(timeCountdown);
-            prompt.textContent = "Game Over"
-            one.setAttribute("style", "display: none");
-            two.setAttribute("style", "display: none");
-            three.setAttribute("style", "display: none");
-            four.setAttribute("style", "display: none");
-            console.log("times up, game over!");
+        if(time <= 0){
+            clearInterval(timeCountdown);
+            endGame();
         }
-    }, 75000);
-    
-    two.setAttribute("style", "display: block");
-    three.setAttribute("style", "display: block");
-    four.setAttribute("style", "display: block");
-    questionsRight = 0;
-    questionsWrong = 0;
+    }, 1000);
+    // append buttons rather than toggle them
+    for (let i = 0; i < 4; i++) {
+        var buttonEl = document.createElement('button');
+        buttonsEl.appendChild(buttonEl);
+        buttonEl.setAttribute("id", "answer" + i);
+        buttonEl.setAttribute("class", "answer");
+    }
 
-    //loop that interates through questions
-    for (var i = 0; i < questionList.length;) {
-        // console.log("question " + i + " started");
-        var answer = questionList[i].correct;
-        questionPrompt.textContent = questionList[i].prompt;
-        one.textContent = questionList[i].answerOne;
-        two.textContent = questionList[i].answerTwo;
-        three.textContent = questionList[i].answerThree;
-        four.textContent = questionList[i].answerFour;
+    var one = document.getElementById("answer0");
+    var two = document.getElementById("answer1");
+    var three = document.getElementById("answer2");
+    var four = document.getElementById("answer3");
+
+    info.setAttribute("style", "display: none");
+    
+    numberCorrect = 0;
+    numberWrong = 0;
+    questionSetUp(questionOn);
+    // changes question and answers
+    function questionSetUp(questionListNumber){
+        console.log("question " + questionListNumber + " started");
+        var answer = questionList[questionListNumber].correct;
+        questionPrompt.textContent = questionList[questionListNumber].prompt;
+        one.textContent = questionList[questionListNumber].answerOne;
+        two.textContent = questionList[questionListNumber].answerTwo;
+        three.textContent = questionList[questionListNumber].answerThree;
+        four.textContent = questionList[questionListNumber].answerFour;
         
-        one.addEventListener("click", function(){Check(1, answer)});
-        two.addEventListener("click", function(){Check(2, answer)});
-        three.addEventListener("click", function(){Check(3, answer)});
-        four.addEventListener("click", function(){Check(4, answer)});
-        i++;
-        //displays right or wrong 
-        //subtracts from clock if wrong
+        one.addEventListener("click", function(event){
+            event.stopPropagation;
+            Check(1, answer);
+            isGameOver();
+        });
+        two.addEventListener("click", function(event){
+            event.stopPropagation;
+            Check(2, answer);
+            isGameOver();
+        });
+        three.addEventListener("click", function(event){
+            event.stopPropagation;
+            Check(3, answer);
+            isGameOver();
+        });
+        four.addEventListener("click", function(event){
+            event.stopPropagation;
+            Check(4, answer);
+            isGameOver();
+        });
+        
+    }
+
+    function isGameOver(){
+        if (questionOn === questionList.length) {
+            endGame();
+        }else{
+            questionOn++;
+            questionSetUp(questionOn);
+        }
+    }
+    
+
+            //displays right or wrong 
+            //subtracts from clock if wrong
         function Check(answer, arrayCorrect){
             if ( arrayCorrect === answer) {
                 grade.textContent = "Correct!";
-                grade.setAttribute("style", "border-top: solid");
+                grade.setAttribute("style", "border-top: solid; display: flex; justify-content: center");
                 numberCorrect++;
-            
+                                              
             } else{
                 grade.textContent = "Wrong!";
-                time -= 15000;
-                console.log(time);
-
-            }
-            
+                grade.setAttribute("style", "border-top: solid; display: flex; justify-content: center");
+                time -= 10;
+                numberWrong++;             
+            }           
         }        
-
     }
+
     //game ends
-    //prompts score board entry
-}
-//when questions are all answered or time expires
+function endGame(){
+        clearTimeout(timeCountdown);
+        questionPrompt.textContent = "Game Over"
+        info.textContent = "Your final socore is " + questionsRight;
+        info.setAttribute("style", "display: flex");
+
+
+
+        one.remove();
+        two.remove();
+        three.remove();
+        four.remove();
+        
+
+        console.log("times up, game over!");
+
+        //prompts score board entry
+        // open a text box and submitt button that links to sore page
+    }
+    
+
