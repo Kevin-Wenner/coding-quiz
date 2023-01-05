@@ -70,17 +70,16 @@ startQuizButton.setAttribute("class", "answer");
 startQuizButton.textContent = "Start Quiz";
 // remove button
 startQuizButton.addEventListener("click", function(event){
-    StartQuiz();
     event.stopPropagation;
     this.remove();
-    
+    StartQuiz();
 });
 
 //button starts time and questions
 function StartQuiz(){
     
     // starts timmer and ends on time out
-    var time = 75;
+    var time = 1;
     var questionOn = 0;
     var timeCountdown = setInterval(function(){
         time--;
@@ -88,6 +87,10 @@ function StartQuiz(){
 
         if(time <= 0){
             clearInterval(timeCountdown);
+            one.remove();
+            two.remove();
+            three.remove();
+            four.remove();
             endGame();
         }
     }, 1000);
@@ -108,7 +111,9 @@ function StartQuiz(){
     
     numberCorrect = 0;
     numberWrong = 0;
+
     questionSetUp(questionOn);
+    
     // changes question and answers
     function questionSetUp(questionListNumber){
         console.log("question " + questionListNumber + " started");
@@ -120,34 +125,60 @@ function StartQuiz(){
         four.textContent = questionList[questionListNumber].answerFour;
         
         one.addEventListener("click", function(event){
-            event.stopPropagation;
+            event.stopImmediatePropagation;
             Check(1, answer);
             isGameOver();
+            if (isGameOver === true) {
+                one.remove();
+                two.remove();
+                three.remove();
+                four.remove();
+            }
+
         });
         two.addEventListener("click", function(event){
-            event.stopPropagation;
+            event.stopImmediatePropagation;
             Check(2, answer);
             isGameOver();
+            if (isGameOver === true) {
+                one.remove();
+                two.remove();
+                three.remove();
+                four.remove();
+            }
         });
         three.addEventListener("click", function(event){
-            event.stopPropagation;
+            event.stopImmediatePropagation;
             Check(3, answer);
             isGameOver();
+            if (isGameOver === true) {
+                one.remove();
+                two.remove();
+                three.remove();
+                four.remove();
+            }
         });
         four.addEventListener("click", function(event){
-            event.stopPropagation;
+            event.stopImmediatePropagation;
             Check(4, answer);
-            isGameOver();
+            if (isGameOver === true) {
+                one.remove();
+                two.remove();
+                three.remove();
+                four.remove();
+            }
+            
         });
         
     }
 
     function isGameOver(){
         if (questionOn === questionList.length) {
-            endGame();
+            return true;
         }else{
             questionOn++;
             questionSetUp(questionOn);
+            return false;
         }
     }
     
@@ -171,18 +202,17 @@ function StartQuiz(){
 
     //game ends
 function endGame(){
-        clearTimeout(timeCountdown);
+        // clearTimeout(timeCountdown);
         questionPrompt.textContent = "Game Over"
         info.textContent = "Your final socore is " + questionsRight;
         info.setAttribute("style", "display: flex");
 
+        // input and submit button add styling
+        var intials = buttonsEl.innerHTML += '<label>Intials</label>';
+        var intialsInput = buttonsEl.innerHTML += "<input type='text' id='form' required minlength='2' maxlength='3'>";
+        var intialsSubmit = buttonsEl.innerHTML += '<button class= "answer">Submit</button>';
 
-
-        one.remove();
-        two.remove();
-        three.remove();
-        four.remove();
-        
+        // push to highscore
 
         console.log("times up, game over!");
 
