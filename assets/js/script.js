@@ -43,12 +43,9 @@ var questionList  = [
         answerThree: "3. for loops",
         answerFour: "4. console.log",
         correct: 4
-    }
-
+    },
 ];
 
-var questionsRight;
-var questionsWrong;
 var time;
 var questionPrompt = document.getElementById("prompt");
 var answers = document.querySelectorAll("answer");
@@ -77,9 +74,8 @@ startQuizButton.addEventListener("click", function(event){
 
 //button starts time and questions
 function StartQuiz(){
-    
     // starts timmer and ends on time out
-    var time = 1;
+    time = 75;
     var questionOn = 0;
     var timeCountdown = setInterval(function(){
         time--;
@@ -124,61 +120,89 @@ function StartQuiz(){
         three.textContent = questionList[questionListNumber].answerThree;
         four.textContent = questionList[questionListNumber].answerFour;
         
-        one.addEventListener("click", function(event){
+        function oneFunc(event){
             event.stopImmediatePropagation;
             Check(1, answer);
             isGameOver();
-            if (isGameOver === true) {
+            one.removeEventListener("click", oneFunc);
+            two.removeEventListener("click", twoFunc);
+            three.removeEventListener("click", threeFunc);
+            four.removeEventListener("click", fourFunc);
+            if (questionOn == questionList.length) {
                 one.remove();
                 two.remove();
                 three.remove();
                 four.remove();
-            }
-
-        });
-        two.addEventListener("click", function(event){
+                clearInterval(timeCountdown);
+                endGame();
+            } 
+        }   
+        function twoFunc(event){
             event.stopImmediatePropagation;
             Check(2, answer);
-            isGameOver();
-            if (isGameOver === true) {
+            isGameOver();           
+            one.removeEventListener("click", oneFunc);
+            two.removeEventListener("click", twoFunc);
+            three.removeEventListener("click", threeFunc);
+            four.removeEventListener("click", fourFunc);
+            if (questionOn == questionList.length) {
                 one.remove();
                 two.remove();
                 three.remove();
                 four.remove();
-            }
-        });
-        three.addEventListener("click", function(event){
+                clearInterval(timeCountdown);
+                endGame();
+            } 
+        }
+        function threeFunc(event){
             event.stopImmediatePropagation;
             Check(3, answer);
-            isGameOver();
-            if (isGameOver === true) {
+            isGameOver();            
+            one.removeEventListener("click", oneFunc);
+            two.removeEventListener("click", twoFunc);
+            three.removeEventListener("click", threeFunc);
+            four.removeEventListener("click", fourFunc);
+            if (questionOn == questionList.length) {
                 one.remove();
                 two.remove();
                 three.remove();
                 four.remove();
-            }
-        });
-        four.addEventListener("click", function(event){
+                clearInterval(timeCountdown);
+                endGame();
+            } 
+        }
+        function fourFunc(event){
             event.stopImmediatePropagation;
             Check(4, answer);
-            if (isGameOver === true) {
+            isGameOver();
+            one.removeEventListener("click", oneFunc);
+            two.removeEventListener("click", twoFunc);
+            three.removeEventListener("click", threeFunc);
+            four.removeEventListener("click", fourFunc); 
+            if (questionOn == questionList.length) {
                 one.remove();
                 two.remove();
                 three.remove();
                 four.remove();
-            }
-            
-        });
-        
+                clearInterval(timeCountdown);
+                endGame();
+            } 
+        }
+        one.addEventListener("click", oneFunc);
+        two.addEventListener("click", twoFunc);
+        three.addEventListener("click", threeFunc);
+        four.addEventListener("click", fourFunc);
+       
     }
 
     function isGameOver(){
-        if (questionOn === questionList.length) {
+        questionOn++;
+        if (questionOn == questionList.length) {
             return true;
-        }else{
-            questionOn++;
-            questionSetUp(questionOn);
-            return false;
+        }else if(questionOn != questionList.length){
+        
+        questionSetUp(questionOn);
+        return false;
         }
     }
     
@@ -202,22 +226,44 @@ function StartQuiz(){
 
     //game ends
 function endGame(){
-        // clearTimeout(timeCountdown);
+        // 
         questionPrompt.textContent = "Game Over"
-        info.textContent = "Your final socore is " + questionsRight;
+        info.textContent = "Your final socore is " + time + " with " + numberCorrect +" answers correct";
         info.setAttribute("style", "display: flex");
 
         // input and submit button add styling
-        var intials = buttonsEl.innerHTML += '<label>Intials</label>';
+        var intials = buttonsEl.innerHTML += '<label id= "formLable" >Intials</label>';
         var intialsInput = buttonsEl.innerHTML += "<input type='text' id='form' required minlength='2' maxlength='3'>";
-        var intialsSubmit = buttonsEl.innerHTML += '<button class= "answer">Submit</button>';
+        var intialsSubmit = buttonsEl.innerHTML += '<button class= "answer" id= "submit">Submit</button>';
 
+        document.getElementById("submit").addEventListener("click", function(){
+            var signiture = document.getElementById("form").value;
+            
+            if(signiture === ""){
+                console.log("please enter your intitals");
+                info.textContent = "Please enter your intitals to post your score"
+            }else{
+                postHighScore(signiture, numberCorrect, numberWrong, time);
+                this.remove();
+                info.textContent = "Score Posted";
+
+            }
+               
+        });
         // push to highscore
+        function postHighScore(playerIntial, playerScoreRight, playerScoreWrong, timeleft){
+                var playerListing = {
+                    player: playerIntial,
+                    scoreRight: playerScoreRight,
+                    scoreWrong: playerScoreWrong,
+                    time:timeleft
+                }
 
+                localStorage.setItem("score", JSON.stringify(playerListing));
+            };
         console.log("times up, game over!");
-
         //prompts score board entry
         // open a text box and submitt button that links to sore page
-    }
-    
+
+}    
 

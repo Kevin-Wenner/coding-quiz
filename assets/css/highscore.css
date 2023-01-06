@@ -1,0 +1,15 @@
+:root{
+    background-color: aqua;
+}
+
+#title{
+    display: flex;
+    justify-content: center;
+    border-bottom: solid;
+    margin: 5em 5em 0 5em;
+}
+
+.scorePost{
+    display: flex;
+    justify-content: space-around;
+}

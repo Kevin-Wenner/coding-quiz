@@ -32,7 +32,6 @@ body {
 #buttons{
     display: flex;
     flex-direction: column;
-    justify-content: center;
 }
 
 
@@ -56,5 +55,12 @@ body {
 
 #form{
     display: flex;
-    width: 30em;
+    justify-content: center;
+    margin-left: 10rem;
+    margin-right: 10rem;
+}
+
+#formLable{
+    display: flex;
+    justify-content: center;
 }
